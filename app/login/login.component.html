@@ -1,0 +1,27 @@
+
+<GridLayout rows="*,auto,*" class="page">
+    <GridLayout row="1" rows="*,auto,auto,auto" class="m-x-auto"
+        style="height:50%;width:30%;padding:20;background-color:#7cc576;">
+        <Label text="Service Orders" class="h1 text-center text-uppercase" textWrap="true" 
+            style="vertical-align:middle;font-weight:100;font-size:48;color:#333;width:60%;"></Label>
+        <StackLayout row="1" class="form">
+            <StackLayout class="input-field">
+                <Label text="Email" class="label font-weight-bold m-b-5" style="color:#333;"></Label>
+                <TextField id="txtUsername" class="input" keyboardType="email" returnKeyType="next"
+                    (returnPress)="focusPass($event)"
+                    autocorrect="false" autocapitalizationType="none"></TextField>
+                <StackLayout class="hr-dark"></StackLayout>
+            </StackLayout>
+        </StackLayout>
+        <StackLayout row="2" class="form">
+            <StackLayout class="input-field">
+                <Label text="Password" class="label font-weight-bold m-b-5" style="color:#333;"></Label>
+                <TextField id="txtPassword" class="input" secure="true" 
+                    autocorrect="false" autocapitalizationType="none"
+                    returnKeyType="go" (returnPress)="onLogin($event)"></TextField>
+                <StackLayout class="hr-dark"></StackLayout>
+            </StackLayout>
+        </StackLayout>
+        <Button row="3" text="Log in" (tap)="onLogin($event)" class="btn btn-primary btn-rounded-lg" style="color:#333;font-weight:600;border-width:1;border-color:blue;"></Button>
+    </GridLayout>
+</GridLayout>

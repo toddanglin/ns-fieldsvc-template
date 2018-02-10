@@ -1,0 +1,35 @@
+
+# Created by https://www.gitignore.io/api/nativescript
+
+### NativeScript ###
+/platforms
+/hooks
+/node_modules
+/lib
+/debugger
+/dist
+
+/app/**/*.map
+/app/**/*.js
+
+.DS_Store
+**/*.log
+tags
+
+ers.txt
+
+
+# End of https://www.gitignore.io/api/nativescript
+
+# Created by https://www.gitignore.io/api/visualstudiocode
+
+### VisualStudioCode ###
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history
+
+
+# End of https://www.gitignore.io/api/visualstudiocode

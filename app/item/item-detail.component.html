@@ -1,0 +1,17 @@
+<ActionBar title="Service Order Details" class="action-bar">
+    <NavigationButton text="Back" android.systemIcon="ic_menu_back"></NavigationButton>
+</ActionBar>
+
+<StackLayout class="page p-15">
+    <Label text="Issue #{{ item.id }}" class="h3 text-uppercase m-b-10"></Label>        
+    <Label class="h2 text-capitalize" [text]="item.title"></Label>
+
+    <Label class="body m-t-20" [text]="item.description" textWrap="true"></Label>
+
+    <StackLayout orientation="horizontal" class="m-t-30" style="horizontal-align:center;">
+        <Button text="Collect Signature" class="btn btn-outline btn-rounded-lg" (tap)="onShowSignatureModal($event)"></Button>
+        <Button text="Collect Payment" class="btn btn-outline m-l-15 btn-rounded-lg" (tap)="onShowPaymentModal($event)"
+            style="color:lawngreen;border-color:lawngreen;"></Button>
+    </StackLayout>
+</StackLayout>
+

@@ -1,0 +1,65 @@
+
+<ActionBar title="Service Orders" class="action-bar">
+    <ActionItem ios.position="left" (tap)="onLogout($event)">
+        <Button [text]="'ion-log-out' | fonticon" class="ion action-item" 
+            style="transform:rotate(180);font-size:26;"></Button>
+    </ActionItem>
+    <ActionItem ios.position="right" (tap)="onShowInfo($event)">
+        <Button [text]="'ion-ios-information-outline' | fonticon" class="ion action-item" 
+            style="font-size:26;"></Button>
+    </ActionItem>
+</ActionBar>
+
+<StackLayout class="page">
+    <GridLayout [columns]="isTablet ? '*, 2*' : '*'">
+        <StackLayout class="p-15" style="padding-bottom: 0;border-right-color:#777;border-right-width:1;">
+            <Label text="Today's Orders" textWrap="true" class="h3" style="color:#777;font-weight:bold;margin-bottom:15;"></Label>
+            
+            <ListView [items]="items" class="list-group"
+                style="margin-left:-15;margin-right:-15;" (itemTap)="changeMapLoc($event)">
+                <ng-template let-item="item">
+                        <StackLayout class="list-group-item" [class.highlight]="selectedItem.id === item.id" >
+                                <Label class="h2" style="color:springgreen;" [text]="item.company"></Label>
+                                <Label class="list-group-item-text" [text]="item.title" textWrap="true"></Label>
+                                <Label class="m-t-20 text-uppercase h5" style="color:mediumvioletred;" text="Priority {{item.severity}}"></Label>
+                        </StackLayout>
+                </ng-template>
+            </ListView>
+        </StackLayout>
+        <StackLayout col="1" *ngIf="isTablet" style="background-color:#000;">
+            <GridLayout rows="*,auto,3*">
+                <MapView (mapReady)="onMapReady($event)" 
+                    mapAnimationsEnabled="true"
+                    latitude="37.2970155" longitude="-121.8174129" zoom="14"
+                    style="width:100%;height:100%"></MapView>
+                <Label row="1" text="{{ selectedItem.address }}" class="h2 p-5 p-l-10" 
+                    style="background-color:aquamarine;color:#333;"></Label>
+                <ScrollView row="2">
+                    <StackLayout style="padding: 15 15 0 15;">
+                        <GridLayout columns="auto,*,auto">
+                            <Label text="{{ selectedItem.contact }}" class="h3"></Label>
+                            <StackLayout orientation="horizontal" col="2" style="color:springgreen;font-size:36;">
+                                <Label [text]="'ion-ios-telephone-outline' | fonticon " class="ion m-l-20" (tap)="dialPhone($event)"></Label>
+                                <Label [text]="'ion-ios-chatbubble-outline' | fonticon " class="ion m-l-20" (tap)="sendSMS($event)"></Label>
+                                <Label [text]="'ion-ios-email-outline' | fonticon " class="ion m-l-20" (tap)="sendEmail($event)"></Label>
+                            </StackLayout>
+                        </GridLayout>
+                        
+                        <Label text="Issue" class="h6 text-uppercase m-t-30" style="font-weight:bold;color:springgreen;"></Label>
+                        <Label text="{{ selectedItem.title }}" class="h3 text-capitalize"></Label>
+                        <Label text="{{ selectedItem.description }}" textWrap="true" class="body m-t-10"></Label>
+                        <Label text="Priority {{ selectedItem.severity }}" class="body text-uppercase m-t-10"></Label>
+                        
+                        <Label text="Additional Detail" class="h6 text-uppercase m-t-30" style="font-weight:bold;color:springgreen;"></Label>
+                        <Label text="Cutsomize to add additional text or information related to the support case" class="body m-t-10" textWrap="true"></Label>
+                        
+                        <StackLayout orientation="horizontal" class="m-t-30" style="horizontal-align:right;">
+                            <Button text="Begin" [nsRouterLink]="['/item', selectedItem.id]" class="btn btn-outline btn-rounded-lg"></Button>
+                            <Button text="Reassign" class="btn btn-outline m-l-15 btn-rounded-lg" style="color:mediumvioletred;border-color:mediumvioletred;"></Button>
+                        </StackLayout>
+                    </StackLayout>
+                </ScrollView>
+            </GridLayout>
+        </StackLayout>
+  </GridLayout>
+</StackLayout>

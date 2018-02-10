@@ -1,0 +1,22 @@
+<StackLayout class="page">
+    <GridLayout rows="auto" columns="75,*,75" class="action-bar p-10" style="background-color:#000;">
+        <Label col="1" text="E-Signature" class="action-bar-title m-5 text-center" textWrap="true"></Label>
+        <Button text="Close" (tap)="close($event)" class="text-right action-item m-r-10" row="0" col="3"></Button> 
+    </GridLayout>
+    <Label text="Use your finger to sign below" class="body text-center m-t-15" textWrap="true"></Label>
+    <GridLayout id="gridSig" class="m-t-20"style="background-color:#FFF;height:200;">
+            <StackLayout class="hr-dark" style="margin-top:150;"></StackLayout>
+            <DrawingPad #DrawingPad 
+            height="200" 
+            id="drawingPad" 
+            penColor="#000" penWidth="3"></DrawingPad>
+    </GridLayout>
+
+    <StackLayout orientation="horizontal" class="m-t-20" style="horizontal-align:center;">
+        <Button text="Clear" (tap)="clearSignature($event)"
+            class="btn btn-outline btn-rounded-lg" style="color:mediumvioletred;border-color:mediumvioletred;"></Button>
+        
+        <Button text="Save Signature" (tap)="saveSignature($event)"
+        class="btn btn-outline m-l-15 btn-rounded-lg"></Button>        
+    </StackLayout>
+</StackLayout>

@@ -1,0 +1,18 @@
+<StackLayout class="page">
+    <GridLayout rows="auto" columns="75,*,75" class="action-bar p-10" style="background-color:#000;">
+        <SegmentedBar col="1" [items]="barItems" class="m-5 text-center" selectedBackgroundColor="springgreen"
+            style="background-color:#000;color:springgreen;border-color:springgreen;"
+            (selectedIndexChange)="selectedIndexChange($event)">
+        </SegmentedBar>
+        <Button text="Close" (tap)="close($event)" class="text-right action-item m-r-10" row="0" col="3"></Button> 
+    </GridLayout>
+    <GridLayout [visibility]="selectedIndexId === 'notes' ? 'visible' : 'collapsed'" class="text-center">
+        <Label text="Display notes on the company, contact and issue" textWrap="true" class="h2"></Label>        
+    </GridLayout>
+    <GridLayout [visibility]="selectedIndexId === 'history' ? 'visible' : 'collapsed'" class="text-center">
+        <Label text="Display service order history for the current customer" textWrap="true" class="h2"></Label>        
+    </GridLayout>
+    <GridLayout [visibility]="selectedIndexId === 'resources' ? 'visible' : 'collapsed'" class="text-center">
+            <Label text="Display access to relevant job resources" textWrap="true" class="h2"></Label>        
+    </GridLayout>
+</StackLayout>

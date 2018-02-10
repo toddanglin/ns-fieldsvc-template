@@ -1,0 +1,31 @@
+<StackLayout class="page">
+    <GridLayout rows="auto" columns="75,*,75" class="action-bar p-10" style="background-color:#000;">
+        <Label col="1" text="Payment" class="action-bar-title m-5 text-center" textWrap="true"></Label>
+        <Button text="Close" (tap)="close($event)" class="text-right action-item m-r-10" row="0" col="3"></Button> 
+    </GridLayout>
+    <Label text="Enter credit card details:" class="h3 text-center text-muted m-t-30" textWrap="true"></Label>
+    
+    <CreditCardView id="card" class="m-t-15" style="width:85%;background-color:#FFF;"></CreditCardView>
+    <StackLayout class="form m-t-20" style="width:85%;">
+        <StackLayout class="input-field">
+            <Label text="Name on Card" class="label font-weight-bold m-b-5"></Label>
+            <TextField id="txtCardName" class="input" returnKeyType="next"
+                (returnPress)="focusPass($event)"
+                autocorrect="false"></TextField>
+            <StackLayout class="hr-light"></StackLayout>
+        </StackLayout>
+        <StackLayout class="input-field">
+            <Label text="Billing Zip" class="label font-weight-bold m-b-5"></Label>
+            <TextField id="txtCardZip" class="input" keyboardType="number"
+                returnKeyType="done"></TextField>
+            <StackLayout class="hr-light"></StackLayout>
+        </StackLayout>
+    </StackLayout>
+
+    <Button text="Submit Payment" (tap)="onSubmitPayment($event)"
+        class="btn btn-outline btn-rounded-lg" 
+        style="width:30%;margin-top:40;"></Button>
+    
+    
+    <Label text="Powered by Stripe" class="h6 text-uppercase text-muted m-t-20 text-center"></Label>
+</StackLayout>
