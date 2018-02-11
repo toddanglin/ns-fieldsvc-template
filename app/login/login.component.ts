@@ -69,7 +69,11 @@ export class LoginComponent implements OnInit {
 					// Login successful, redirect to main page
 					console.log("Login success! Redirect...");
 
-					this.routerExtensions.navigate(["/items"], { clearHistory: true, transition: { name: "slideBottom", curve: "easeInOut" } });
+					// Redirect to default view OR redirectPath (if set)
+					let path = (this.loginSvc.redirectPath === undefined) ? "/items" : this.loginSvc.redirectPath;
+					this.loginSvc.redirectPath = undefined;
+
+					this.routerExtensions.navigate([path], { clearHistory: true, transition: { name: "slideBottom", curve: "easeInOut" } });
 				} else {
 					// Login failed, show error to user
 					console.warn("Login failed");

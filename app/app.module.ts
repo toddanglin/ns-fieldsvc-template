@@ -18,7 +18,7 @@ import { SignatureModal } from "./item/collect-signature/signature-modal.compone
 import { PaymentModal } from "./item/collect-payment/payment-modal.component";
 
 // API Key Strings
-const config = require("./config.json");
+import { Config } from "./config";
 
 
 // Uncomment and add to NgModule imports if you need to use two-way binding
@@ -26,6 +26,7 @@ const config = require("./config.json");
 
 // Uncomment and add to NgModule imports  if you need to use the HTTP wrapper
 // import { NativeScriptHttpModule } from "nativescript-angular/http";
+import { AuthGuard } from './auth-guard.service';
 
 declare var GMSServices: any;
 
@@ -59,6 +60,7 @@ declare var GMSServices: any;
         ModalDialogService,
         ItemService,
         LoginService,
+        AuthGuard,
     ],
     schemas: [
         NO_ERRORS_SCHEMA
