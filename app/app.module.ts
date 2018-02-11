@@ -72,8 +72,8 @@ Pass your application module to the bootstrapModule function located in main.ts 
 export class AppModule { 
     constructor() {
         if (isIOS) {
-            console.log("GOOGLE MAPS API KEY", config.GOOGLE_MAPS_KEY);
-            GMSServices.provideAPIKey(config.GOOGLE_MAPS_KEY);
+            console.log("GOOGLE MAPS API KEY", Config.GOOGLE_MAPS_KEY);
+            GMSServices.provideAPIKey(Config.GOOGLE_MAPS_KEY);
         }
 
     }

@@ -1,13 +1,13 @@
 // this import should be first in order to load some required settings (like globals and reflect-metadata)
 import { platformNativeScriptDynamic } from "nativescript-angular/platform";
-
 import { AppModule } from "./app.module";
-
 import * as app from 'application';
 import { isIOS } from "tns-core-modules/platform/platform";
 
-const config = require("./config.json");
+// Shared API Keys
+import { Config } from "./config";
 
+// Stripe API
 declare const STPPaymentConfiguration;
 
 /* ***********************************************************
@@ -17,11 +17,12 @@ declare const STPPaymentConfiguration;
 *************************************************************/
 import "./shared/kinvey.common";
 
+// Angular + NativeScript startup bootstrap
 platformNativeScriptDynamic().bootstrapModule(AppModule);
 
 app.on(app.launchEvent, (args) => {
     if (isIOS) {
-        console.log("STRIPE API KEY", config.STRIPE_TEST_KEY);
-        STPPaymentConfiguration.sharedConfiguration().publishableKey = config.STRIPE_TEST_KEY;
+        console.log("STRIPE API KEY", Config.STRIPE_TEST_KEY);
+        STPPaymentConfiguration.sharedConfiguration().publishableKey = Config.STRIPE_TEST_KEY;
     }
 });
