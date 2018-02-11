@@ -21,7 +21,7 @@
                         <StackLayout class="list-group-item" [class.highlight]="selectedItem.id === item.id" >
                                 <Label class="h2" style="color:springgreen;" [text]="item.company"></Label>
                                 <Label class="list-group-item-text" [text]="item.title" textWrap="true"></Label>
-                                <Label class="m-t-20 text-uppercase h5" style="color:mediumvioletred;" text="Priority {{item.severity}}"></Label>
+                                <Label class="m-t-20 text-uppercase h5" text="Priority {{item.severity}}"></Label>
                         </StackLayout>
                 </ng-template>
             </ListView>
