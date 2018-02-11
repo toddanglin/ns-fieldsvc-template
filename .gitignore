@@ -12,8 +12,8 @@
 /app/**/*.map
 /app/**/*.js
 
-# Ignore API Keys stored in config.json
-app/config.json
+# Ignore API Keys stored in config.ts
+app/config.ts
 
 .DS_Store
 **/*.log
