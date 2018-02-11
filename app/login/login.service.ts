@@ -10,7 +10,7 @@ export class LoginService {
         return new Promise((resolve, reject) => {
             Kinvey.User.login(username, password)
                 .then(user => {
-                    console.log("Login success.", user.username);
+                    console.log("Login success.", JSON.stringify(user.data));
                     resolve(true);
                 })
                 .catch(err => {
