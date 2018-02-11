@@ -10,10 +10,13 @@ const config = require("./config.json");
 
 declare const STPPaymentConfiguration;
 
-// A traditional NativeScript application starts by initializing global objects, setting up global CSS rules, creating, and navigating to the main page. 
-// Angular applications need to take care of their own initialization: modules, components, directives, routes, DI providers. 
-// A NativeScript Angular app needs to make both paradigms work together, so we provide a wrapper platform object, platformNativeScriptDynamic, 
-// that sets up a NativeScript application and can bootstrap the Angular framework.
+/* ***********************************************************
+* The {N} Kinvey plugin needs some initialization steps before it is ready
+* for use. Check out the initialization script at /shared/kinvey.common.ts
+* along with more information about it.
+*************************************************************/
+import "./shared/kinvey.common";
+
 platformNativeScriptDynamic().bootstrapModule(AppModule);
 
 app.on(app.launchEvent, (args) => {
