@@ -13,11 +13,14 @@ This app template provides the code necessary to create apps for "field service"
 ## How do I use this template?
 1. Clone this repo
 2. Create a new Kinvey project ([console.kinvey.com](https://console.kinvey.com))
-    * _TODO: Provide instructions or script to init Kinvey schema/test users_
+    * _TODO: Provide instructions or script to init Kinvey schema_
+    * Create at least one User `(Identity > Users > +Add User)`
+      * _You will use this username/password to log in to the app_
 3. Modify `config.ts` in the `app` directory to provide the requested SDK API keys
     * At a minimum, the Google Maps SDK and Kinvey SDK API keys are needed
 4. Run the app on iOS or Android
     * `tns run ios` or `tns run android`
+    * NOTE: The template is currently optimized for tablets
 
 ## Issues
 If you run in to trouble getting this template configured, or have suggestions for improving the template, please open an [Issue](https://github.com/toddanglin/ns-fieldsvc-template/issues)
