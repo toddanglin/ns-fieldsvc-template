@@ -8,7 +8,7 @@
             <StackLayout class="input-field">
                 <Label text="Email" class="label font-weight-bold m-b-5" style="color:#333;"></Label>
                 <TextField id="txtUsername" class="input" keyboardType="email" returnKeyType="next"
-                    (returnPress)="focusPass($event)"
+                    (returnPress)="focusPass($event)" [text]="strUsername"
                     autocorrect="false" autocapitalizationType="none"></TextField>
                 <StackLayout class="hr-dark"></StackLayout>
             </StackLayout>
@@ -16,13 +16,15 @@
         <StackLayout row="2" class="form">
             <StackLayout class="input-field">
                 <Label text="Password" class="label font-weight-bold m-b-5" style="color:#333;"></Label>
-                <TextField id="txtPassword" class="input" secure="true" 
+                <TextField id="txtPassword" class="input" secure="true" [text]="strPassword"
                     autocorrect="false" autocapitalizationType="none"
                     returnKeyType="go" (returnPress)="onLogin($event)"></TextField>
                 <StackLayout class="hr-dark"></StackLayout>
             </StackLayout>
         </StackLayout>
-        <Button row="3" text="Log in" (tap)="onLogin($event)" class="btn btn-primary btn-rounded-lg" style="color:#333;font-weight:600;border-width:1;border-color:blue;"></Button>
+        <ActivityIndicator row="3" [busy]="isLoggingIn" class="activity-indicator" style="height:60;color:#000;"></ActivityIndicator>
+        <Button row="3" text="Log in" (tap)="onLogin($event)" [visibility]="!isLoggingIn ? 'visible' : 'collapsed'"
+            class="btn btn-primary btn-rounded-lg" style="color:#333;font-weight:600;border-width:1;border-color:blue;"></Button>
     </GridLayout>
     <StackLayout row="2" [visibility]="isGeneratingData ? 'visible' : 'collapsed'" class="text-center" style="margin-top:50;">
         <ActivityIndicator [busy]="isGeneratingData" class="activity-indicator"></ActivityIndicator>

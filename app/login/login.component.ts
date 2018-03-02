@@ -52,6 +52,7 @@ export class LoginComponent implements OnInit {
 	};
 
 	onLogin = () => {
+		this.isLoggingIn = true;
 		console.log("Login Event");
 		let txtUser = <TextField>topmost().getViewById("txtUsername");
 		let txtPass = <TextField>topmost().getViewById("txtPassword");
@@ -60,7 +61,7 @@ export class LoginComponent implements OnInit {
 		txtUser.dismissSoftInput();
 		txtPass.dismissSoftInput();
 
-		if (txtUser.text.trim() === "" || txtPass.text.trim() === "") {
+		if (this.strUsername.trim() === "" || this.strPassword.trim() === "") {
 			console.log("Missing required login values. Aborting login attempt.");
 
 			this.feedback.warning({
@@ -72,8 +73,8 @@ export class LoginComponent implements OnInit {
 		}
 
 		console.log("Attempt Login");
-		let username = txtUser.text.trim();
-		let pass = txtPass.text.trim();
+		let username = this.strUsername.trim();
+		let pass = this.strPassword.trim();
 
 		this.loginSvc.login(username, pass)
 			.then(success => {
@@ -85,10 +86,14 @@ export class LoginComponent implements OnInit {
 					let path = (this.loginSvc.redirectPath === undefined) ? "/items" : this.loginSvc.redirectPath;
 					this.loginSvc.redirectPath = undefined;
 
+					this.isLoggingIn = false;
+
 					this.routerExtensions.navigate([path], { clearHistory: true, transition: { name: "slideBottom", curve: "easeInOut" } });
 				} else {
 					// Login failed, show error to user
 					console.warn("Login failed");
+
+					this.isLoggingIn = false;
 
 					this.feedback.error({
 						title: "Login Failed",
