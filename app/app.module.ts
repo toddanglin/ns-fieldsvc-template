@@ -12,6 +12,7 @@ import { isIOS } from "tns-core-modules/platform/platform";
 import { TNSFontIconModule } from 'nativescript-ngx-fonticon';
 import { LoginComponent } from "./login/login.component";
 import { LoginService } from "./login/login.service";
+import { GenerateDataService } from "./shared/generatedata.service";
 import { NSModuleFactoryLoader } from "nativescript-angular/router";
 import { ModalDetail } from "./item/modal-detail/modal-detail.component";
 import { SignatureModal } from "./item/collect-signature/signature-modal.component";
@@ -60,6 +61,7 @@ declare var GMSServices: any;
         ModalDialogService,
         ItemService,
         LoginService,
+        GenerateDataService,
         AuthGuard,
     ],
     schemas: [

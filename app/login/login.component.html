@@ -24,4 +24,9 @@
         </StackLayout>
         <Button row="3" text="Log in" (tap)="onLogin($event)" class="btn btn-primary btn-rounded-lg" style="color:#333;font-weight:600;border-width:1;border-color:blue;"></Button>
     </GridLayout>
+    <StackLayout row="2" [visibility]="isGeneratingData ? 'visible' : 'collapsed'" class="text-center" style="margin-top:50;">
+        <ActivityIndicator [busy]="isGeneratingData" class="activity-indicator"></ActivityIndicator>
+        <Label text="Generating demo data..." textWrap="true" class="body m-t-5"></Label>
+    </StackLayout>
+    <Button row="2" text="Generate Demo Data" (tap)="onGenerateData($event)" [visibility]="!isGeneratingData ? 'visible' : 'collapsed'"></Button>
 </GridLayout>

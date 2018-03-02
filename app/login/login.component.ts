@@ -4,8 +4,11 @@ import { Component, OnInit } from '@angular/core';
 import { isIOS } from 'tns-core-modules/platform/platform';
 import { topmost } from 'tns-core-modules/ui/frame/frame';
 import { LoginService } from './login.service';
+import { GenerateDataService } from '../shared/generatedata.service';
 import { Feedback, FeedbackPosition, FeedbackType } from "nativescript-feedback";
 import { Page } from 'ui/page';
+import { confirm } from "ui/dialogs";
+import { Config } from "../config";
 
 //import { RouterExtensions } from 'nativescript-angular';
 //import { TextField } from 'ui/text-field';
@@ -19,6 +22,10 @@ import { Page } from 'ui/page';
 
 export class LoginComponent implements OnInit {
 	feedback: Feedback;
+	strUsername: string;
+	strPassword: string;
+	isGeneratingData: boolean;
+	isLoggingIn: boolean;
 
 	constructor(private loginSvc: LoginService, private routerExtensions: RouterExtensions, private page: Page) { 
 		this.page.actionBarHidden = true;
@@ -32,6 +39,11 @@ export class LoginComponent implements OnInit {
 		}
 		
 		this.feedback = new Feedback();
+		this.isGeneratingData = false;
+		this.isLoggingIn = false;
+		this.strUsername = "";
+		this.strPassword = "";
+
 	}
 
 	focusPass = (event) => {
@@ -87,4 +99,43 @@ export class LoginComponent implements OnInit {
 				}
 			});
 	};
+
+	onGenerateData = (args) => {
+		// Do not proceed if Kinvey API keys are not configured
+		if (!this.isKinveyAPIConfigured) {
+			this.checkForKinveyAPIKeys();
+			return;
+		}
+
+		confirm({
+            title: "Generate Demo Data",
+            message: "This action will ERASE and regenerate the data and users for this template in your Kinvey backend. Any changes that have been made to the backend data will be lost. Do you want to continue?",
+            okButtonText: "Continue",
+            cancelButtonText: "Cancel"
+            })
+            .then(answer => {
+                if (answer) {
+					console.log("User confirmed generate demo data");
+					this.isGeneratingData = true;
+                    this.demoDataSvc.generateDemoData()
+                        .then(() => {
+							this.isGeneratingData = false;
+							this.feedback.success({
+								title: "Demo Data Generated",
+								message: "All done. Demo data and users successfully generated in your Kinvey account."
+							});
+
+							// Pre-populate login field with demo user
+							this.strUsername = "techster@quantum.com";
+							this.strPassword = "demo";
+                        })
+                        .catch(err => {
+                            this.feedback.error({
+                                title: "Generate Demo Data Error",
+                                message: "Oops! Something went wrong trying to generate the demo data. Please try again or check your Kinvey console."
+                            });
+                        });
+                }
+            });
+	}
 }
