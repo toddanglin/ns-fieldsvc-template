@@ -16,6 +16,7 @@ import {registerElement} from "nativescript-angular/element-registry";
 import { EventData } from "tns-core-modules/data/observable/observable";
 import { RouterExtensions } from "nativescript-angular/router";
 import { ModalDialogService, ModalDialogOptions } from "nativescript-angular/modal-dialog";
+import { LoginService } from '../login/login.service';
 import { ModalDetail } from "./modal-detail/modal-detail.component";
 import { dial, sms } from "nativescript-phone";
 import * as email from "nativescript-email";
@@ -49,6 +50,7 @@ export class ItemsComponent implements OnInit {
     // This pattern makes use of Angular’s dependency injection implementation to inject an instance of the ItemService service into this class. 
     // Angular knows about this service because it is included in your app’s main NgModule, defined in app.module.ts.
     constructor(private itemService: ItemService, 
+                private loginService: LoginService,
                 private routerExtensions: RouterExtensions, 
                 private modalService: ModalDialogService,
                 private vcRef: ViewContainerRef,
@@ -112,7 +114,16 @@ export class ItemsComponent implements OnInit {
             .then(answer => {
                 if (answer) {
                     console.log("User confirmed logout");
-                    this.routerExtensions.navigate(["/login"], { clearHistory: true, transition: { name: "slideTop", curve: "easeInOut" } });
+                    this.loginService.logout()
+                        .then(() => {
+                            this.routerExtensions.navigate(["/login"], { clearHistory: true, transition: { name: "slideTop", curve: "easeInOut" } });
+                        })
+                        .catch(err => {
+                            this.feedback.error({
+                                title: "Logout Error",
+                                message: "Oops! Something went wrong trying to logout. Please try again or contact support."
+                            });
+                        });
                 }
             });
     };

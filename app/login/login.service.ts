@@ -20,18 +20,25 @@ export class LoginService {
         });
     }
 
-    logout(): void {
+    logout(): Promise<void> {
         console.log("Logout User");
 
-        // Clear cached credentials
-        Kinvey.User.logout();
-
-        return;
+        return new Promise((resolve, reject) => {
+            // Clear cached credentials
+            Kinvey.User.logout()
+                .then(() => {
+                    resolve(); // Logout successful
+                })
+                .catch(err => {
+                    console.warn("Logout Failed", err);
+                    reject("Logout Failed");
+                });
+        });
     }
 
     isLoggedIn(): boolean {
         // Check for cached user credentials
-        let activeUser = Kinvey.User.getActiveUser();
+        let activeUser = <Kinvey.User>Kinvey.User.getActiveUser();
 
         // If activeUser is NOT null, then login exists
         return (activeUser === null) ? false : true;
