@@ -19,6 +19,7 @@
     "@angular/platform-browser": "~5.2.0",
     "@angular/platform-browser-dynamic": "~5.2.0",
     "@angular/router": "~5.2.0",
+    "faker": "^4.1.0",
     "kinvey-nativescript-sdk": "^3.9.10",
     "nativescript-angular": "~5.2.0",
     "nativescript-drawingpad": "^2.1.1",
