@@ -26,8 +26,9 @@ export class LoginComponent implements OnInit {
 	strPassword: string;
 	isGeneratingData: boolean;
 	isLoggingIn: boolean;
+	isKinveyAPIConfigured: boolean;
 
-	constructor(private loginSvc: LoginService, private routerExtensions: RouterExtensions, private page: Page) { 
+	constructor(private loginSvc: LoginService, private demoDataSvc: GenerateDataService, private routerExtensions: RouterExtensions, private page: Page) { 
 		this.page.actionBarHidden = true;
         this.page.backgroundSpanUnderStatusBar = true;
 	}
@@ -44,6 +45,20 @@ export class LoginComponent implements OnInit {
 		this.strUsername = "";
 		this.strPassword = "";
 
+		this.checkForKinveyAPIKeys();
+	}
+
+	checkForKinveyAPIKeys = (): void => {
+		if (Config.KINVEY_APP_KEY === "YOUR_API_KEY" || Config.KINVEY_APP_SECRET === "YOUR_API_KEY") {
+			this.isKinveyAPIConfigured = false;
+			this.feedback.warning({
+				title: "Missing API Keys",
+				message: "To use this template, you must provide Kinvey API keys. Please update the app configuration.",
+				duration: 10000
+			});
+		} else {
+			this.isKinveyAPIConfigured = true;
+		}
 	}
 
 	focusPass = (event) => {
@@ -52,6 +67,12 @@ export class LoginComponent implements OnInit {
 	};
 
 	onLogin = () => {
+		// Do not proceed if Kinvey API keys are missing
+		if (!this.isKinveyAPIConfigured) {
+			this.checkForKinveyAPIKeys();
+			return;
+		}
+
 		this.isLoggingIn = true;
 		console.log("Login Event");
 		let txtUser = <TextField>topmost().getViewById("txtUsername");
