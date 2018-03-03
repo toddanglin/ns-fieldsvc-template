@@ -8,7 +8,7 @@
             <StackLayout class="input-field">
                 <Label text="Email" class="label font-weight-bold m-b-5" style="color:#333;"></Label>
                 <TextField id="txtUsername" class="input" keyboardType="email" returnKeyType="next"
-                    (returnPress)="focusPass($event)" [text]="strUsername"
+                    (returnPress)="focusPass($event)" [(ngModel)]="strUsername"
                     autocorrect="false" autocapitalizationType="none"></TextField>
                 <StackLayout class="hr-dark"></StackLayout>
             </StackLayout>
@@ -16,7 +16,7 @@
         <StackLayout row="2" class="form">
             <StackLayout class="input-field">
                 <Label text="Password" class="label font-weight-bold m-b-5" style="color:#333;"></Label>
-                <TextField id="txtPassword" class="input" secure="true" [text]="strPassword"
+                <TextField id="txtPassword" class="input" secure="true" [(ngModel)]="strPassword"
                     autocorrect="false" autocapitalizationType="none"
                     returnKeyType="go" (returnPress)="onLogin($event)"></TextField>
                 <StackLayout class="hr-dark"></StackLayout>
