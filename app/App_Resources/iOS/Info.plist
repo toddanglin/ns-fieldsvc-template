@@ -48,5 +48,7 @@
 		<string>tel</string>
 		<string>telprompt</string>
 	</array>
+	<key>NSFaceIDUsageDescription</key>
+  	<string>For easy authentication with our app.</string>
 </dict>
 </plist>

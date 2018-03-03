@@ -9,6 +9,9 @@ import { Feedback, FeedbackPosition, FeedbackType } from "nativescript-feedback"
 import { Page } from 'ui/page';
 import { confirm } from "ui/dialogs";
 import { Config } from "../config";
+import { FingerprintAuth, BiometricIDAvailableResult } from "nativescript-fingerprint-auth";
+import { SecureStorage } from "nativescript-secure-storage";
+import * as appSettings from "tns-core-modules/application-settings";
 
 //import { RouterExtensions } from 'nativescript-angular';
 //import { TextField } from 'ui/text-field';
@@ -27,10 +30,17 @@ export class LoginComponent implements OnInit {
 	isGeneratingData: boolean;
 	isLoggingIn: boolean;
 	isKinveyAPIConfigured: boolean;
+	private fingerprintAuth: FingerprintAuth;
+	private secureStorage: SecureStorage;
+	private isBioAuthAvailable: boolean;
+	private isFingerprintAvailable: boolean;
+	private isFaceAvailable: boolean;
 
 	constructor(private loginSvc: LoginService, private demoDataSvc: GenerateDataService, private routerExtensions: RouterExtensions, private page: Page) { 
 		this.page.actionBarHidden = true;
-        this.page.backgroundSpanUnderStatusBar = true;
+		this.page.backgroundSpanUnderStatusBar = true;
+		this.fingerprintAuth = new FingerprintAuth();
+		this.secureStorage = new SecureStorage();
 	}
 
 	ngOnInit() {
@@ -44,8 +54,23 @@ export class LoginComponent implements OnInit {
 		this.isLoggingIn = false;
 		this.strUsername = "";
 		this.strPassword = "";
+		this.isBioAuthAvailable = false;
+
+		this.checkForBioAuth();
 
 		this.checkForKinveyAPIKeys();
+	}
+
+	checkForBioAuth = (): void => {
+		this.fingerprintAuth.available().then((result: BiometricIDAvailableResult) => {
+			console.log(`Biometric ID available? ${result.any}`);
+			console.log(`Touch? ${result.touch}`);
+			console.log(`Face? ${result.face}`);
+
+			this.isBioAuthAvailable = result.any;
+			this.isFingerprintAvailable = result.touch ? true : false;
+			this.isFaceAvailable = result.face ? true : false;
+		  });
 	}
 
 	checkForKinveyAPIKeys = (): void => {
@@ -66,10 +91,44 @@ export class LoginComponent implements OnInit {
 		txtPass.focus();
 	};
 
+	onBioLogin = () => {
+		this.isLoggingIn = true;
+		this.fingerprintAuth.verifyFingerprint(
+			{
+			  //title: 'Android title', // optional title (used only on Android)
+			  message: 'Authenticate', // optional (used on both platforms) - for FaceID on iOS see the notes about NSFaceIDUsageDescription
+			  authenticationValidityDuration: 10, // optional (used on Android, default 5)
+			  useCustomAndroidUI: false // set to true to use a different authentication screen (see below)
+			})
+			.then(() => {
+				console.log("Biometric ID OK");
+
+				// Get cached username/password
+				this.strUsername = this.secureStorage.getSync({ key: "loginUsername" });
+				this.strPassword = this.secureStorage.getSync({ key: "loginPassword" });
+
+				console.log("Attempt login with cached bio credentials...");
+				this.onLogin();
+			})
+			.catch(err => {
+				console.warn(`Biometric ID NOT OK: ${JSON.stringify(err)}`)
+
+				this.isLoggingIn = false;
+
+				this.feedback.error({
+					title: "Authentication Error",
+					message: "Failed to valiate using your biometrics. Please try again or log in with your username and password."
+				});
+			});
+	}
+
 	onLogin = () => {
 		// Do not proceed if Kinvey API keys are missing
 		if (!this.isKinveyAPIConfigured) {
 			this.checkForKinveyAPIKeys();
+
+			this.isLoggingIn = false;
+
 			return;
 		}
 
@@ -83,12 +142,14 @@ export class LoginComponent implements OnInit {
 		txtPass.dismissSoftInput();
 
 		if (this.strUsername.trim() === "" || this.strPassword.trim() === "") {
-			console.log("Missing required login values. Aborting login attempt.");
+			console.log("Missing required login values. Aborting login attempt.", `U: ${this.strUsername}`, `P: ${this.strPassword}`);
 
 			this.feedback.warning({
 				title: "Required Inputs",
 				message: "Oops! You must provide both your email and password before logging-in."
 			});
+
+			this.isLoggingIn = false;
 
 			return;
 		}
@@ -103,13 +164,38 @@ export class LoginComponent implements OnInit {
 					// Login successful, redirect to main page
 					console.log("Login success! Redirect...");
 
-					// Redirect to default view OR redirectPath (if set)
-					let path = (this.loginSvc.redirectPath === undefined) ? "/items" : this.loginSvc.redirectPath;
-					this.loginSvc.redirectPath = undefined;
+					let bioAuthPrefSet = appSettings.getBoolean("prefSetAllowBioAuth", false);
+					if (this.isBioAuthAvailable && !bioAuthPrefSet) {
+						// Confirm if auth user wants to use bio auth in the future
+						let title = "Use Fingerprint";
+						if (isIOS) {
+							title = "Use TouchID";
+							if (this.isFaceAvailable) {
+								title = "Use FaceID";
+							}
+						}
+						confirm({
+							title: title,
+							message: "Do you want to enable biometric authentication for future logins?\n\nYour credentials will be securely saved for future logins if you choose this option.",
+							okButtonText: "Allow",
+							cancelButtonText: "Don't Allow"
+						})
+						.then(response => {
+							// User wants to allow biometric login in the future
+							appSettings.setBoolean("allowBioAuth", response);
+							appSettings.setBoolean("prefSetAllowBioAuth", true);
+						
+							if (response) {
+								// Securely cache user credentials for future bio logins
+								this.secureStorage.setSync({ key: "loginUsername", value: username });
+								this.secureStorage.setSync({ key: "loginPassword", value: pass });
+							}
 
-					this.isLoggingIn = false;
-
-					this.routerExtensions.navigate([path], { clearHistory: true, transition: { name: "slideBottom", curve: "easeInOut" } });
+							this.navigateToPage();
+						})
+					} else {
+						this.navigateToPage();
+					}
 				} else {
 					// Login failed, show error to user
 					console.warn("Login failed");
@@ -125,6 +211,15 @@ export class LoginComponent implements OnInit {
 				}
 			});
 	};
+
+	private navigateToPage = (): void => {
+		this.isLoggingIn = false;
+
+		// Redirect to default view OR redirectPath (if set)
+		let path = (this.loginSvc.redirectPath === undefined) ? "/items" : this.loginSvc.redirectPath;
+		this.loginSvc.redirectPath = undefined;
+		this.routerExtensions.navigate([path], { clearHistory: true, transition: { name: "slideBottom", curve: "easeInOut" } });
+	}
 
 	onGenerateData = (args) => {
 		// Do not proceed if Kinvey API keys are not configured
